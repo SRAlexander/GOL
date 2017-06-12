@@ -70,6 +70,22 @@ class Game extends React.Component {
         });
     }
 
+    // Randomly fill the squares array with 0's and 1's
+    random() {
+
+        // No nice way of filling a 2d array with duplicating rows so far... weird!
+        const repeat = (fn, n) => Array(n).fill(0).map(fn);
+        const rand = () => Math.round((Math.random() * 1));
+        const squaresCreation = n => repeat(() => repeat(rand, n), n);
+
+        const history = this.state.history.slice(0, this.state.stepNumber + 1);
+        const squares =  squaresCreation(60);
+        this.setState({
+            history: history.concat([{squares : squares}]),
+            stepNumber: history.length
+        })
+    }
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
@@ -87,7 +103,15 @@ class Game extends React.Component {
 
 
         return (
+
             <div className="game">
+                <div className="button row">
+                    <button onClick={() => this.random()}>Random</button>
+                    <button>Step</button>
+                    <button>Run</button>
+                    <button>Stop</button>
+                </div><br/>
+
                 <div className="game-board">
                     <Board squares=
                         {current.squares} onClick={(x,y) => this.handleClick(x,y)} />
