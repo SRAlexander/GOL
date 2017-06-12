@@ -42,16 +42,21 @@ ol, ul {
   background: #fff;
   border: 1px solid #999;
   float: left;
-  font-size: 24px;
+  font-size: 9px;
   font-weight: bold;
   line-height: 34px;
-  height: 34px;
+  height: 10px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  width: 10px;
 }
+
+.square.alive{
+    background-color: blue;
+}
+
 
 .square:focus {
   outline: none;

@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
+var classNames = require( 'classnames' );
 
 function Square(props) {
+
     return (
-        <button className="square" onClick={props.onClick} >
-            {props.value}
+        <button className={props.class} onClick={props.onClick} >
         </button>
     );
 }
@@ -14,7 +15,11 @@ function Square(props) {
 class Board extends React.Component {
 
     renderSquare(x,y) {
-        return <Square key={y} value={this.props.squares[x][y]} onClick={() => this.props.onClick(x,y)} />;
+        var btnClass = classNames({
+            'square': true,
+            'alive': this.props.squares[x][y] === 1
+        });
+        return <Square key={y} class={btnClass} onClick={() => this.props.onClick(x,y)} />;
     }
 
     render() {
@@ -23,16 +28,15 @@ class Board extends React.Component {
             <div>
                 {this.props.squares.map( function(rowItem, rowIndex)
                 {
-                     return <div className="board-row" key={ rowIndex }>
+                     return (<div className="board-row" key={ rowIndex }>
                         {rowItem.map(function(square, columnIndex)
                         {
-                            console.log("r: " + rowIndex + "c: " + columnIndex )
-                             {return this.renderSquare(rowIndex, columnIndex)}
-                        },this)};
-                        </div>
+                             {return (this.renderSquare(rowIndex, columnIndex))}
+                        },this)}
+                        </div>)
                   },this)}
             </div>
-        );
+        )
     }
 }
 
@@ -40,7 +44,7 @@ class Game extends React.Component {
     constructor() {
         super();
         this.state = {
-            history: [{squares:Array(10).fill(new Array(10).fill(0))}],
+            history: [{squares:Array(60).fill(new Array(60).fill(0))}],
             stepNumber: 0,
         }
     }
