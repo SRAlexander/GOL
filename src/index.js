@@ -46,6 +46,9 @@ class Game extends React.Component {
         this.state = {
             history: [{squares:Array(60).fill(new Array(60).fill(0))}],
             stepNumber: 0,
+            interval: null,
+            intervalTime: 10,
+            running: false,
         }
     }
 
@@ -81,7 +84,8 @@ class Game extends React.Component {
         const squares =  squaresCreation(60);
         this.setState({
             history: history.concat([{squares : squares}]),
-            stepNumber: history.length
+            stepNumber: history.length,
+
         })
     }
 
@@ -208,6 +212,25 @@ class Game extends React.Component {
         return res
     }
 
+    start() {
+    if (!this.state.running) {
+        var interval = setInterval(this.step.bind(this), this.state.intervaltime);
+        this.setState({
+            interval: interval,
+            running: !this.state.running
+        })
+    }
+}
+
+    stop() {
+    if (this.state.running) {
+        clearInterval(this.state.interval);
+        this.setState({
+            running : !this.state.running
+        })
+    }
+}
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
@@ -229,9 +252,9 @@ class Game extends React.Component {
             <div className="game">
                 <div className="button row">
                     <button onClick={() => this.random()}>Random</button>
-                    <button onClick={() => this.step()}>Step</button>
-                    <button>Run</button>
-                    <button>Stop</button>
+                    <button onClick={() => this.step(this)}>Step</button>
+                    <button onClick={() => this.start()}>Run</button>
+                    <button onClick={() => this.stop()}>Stop</button>
                 </div><br/>
 
                 <div className="game-board">
