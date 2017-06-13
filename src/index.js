@@ -213,23 +213,37 @@ class Game extends React.Component {
     }
 
     start() {
-    if (!this.state.running) {
-        var interval = setInterval(this.step.bind(this), this.state.intervaltime);
-        this.setState({
-            interval: interval,
-            running: !this.state.running
-        })
+        if (!this.state.running) {
+            var interval = setInterval(this.step.bind(this), this.state.intervaltime);
+            this.setState({
+                interval: interval,
+                running: !this.state.running
+            })
+        }
     }
-}
 
     stop() {
-    if (this.state.running) {
-        clearInterval(this.state.interval);
-        this.setState({
-            running : !this.state.running
-        })
+        if (this.state.running) {
+            clearInterval(this.state.interval);
+            this.setState({
+                running : !this.state.running
+            })
+        }
     }
-}
+
+    // Just add a new empty array to history (only when !running)
+    clear() {     
+        if (!this.state.running){
+            const history = this.state.history.slice(0, this.state.stepNumber + 1);
+            const squares = new Array(60).fill(new Array(60).fill(0));
+            this.setState({
+                history : history.concat([{squares: squares}]),
+                stepNumber: history.length
+            })
+        }
+
+    }
+
 
     render() {
         const history = this.state.history;
@@ -255,7 +269,8 @@ class Game extends React.Component {
                     <button onClick={() => this.step(this)}>Step</button>
                     <button onClick={() => this.start()}>Run</button>
                     <button onClick={() => this.stop()}>Stop</button>
-                </div><br/>
+                    <button onClick={() => this.clear()}>Clear</button>
+                </div>
 
                 <div className="game-board">
                     <Board squares=
