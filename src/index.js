@@ -50,6 +50,7 @@ class Game extends React.Component {
             intervalTime: 10,
             running: false,
         }
+        this.step = this.step.bind(this)
     }
 
     handleClick(x,y) {
@@ -214,7 +215,7 @@ class Game extends React.Component {
 
     start() {
         if (!this.state.running) {
-            var interval = setInterval(this.step.bind(this), this.state.intervaltime);
+            var interval = setInterval(this.step, this.state.intervaltime);
             this.setState({
                 interval: interval,
                 running: !this.state.running
