@@ -1,58 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 var classNames = require( 'classnames' );
 
-function Square(props) {
 
-    return (
-        <button className={props.class} title={props.key} key={props.key} onClick={props.onClick} >
-        </button>
-    );
-}
-
-class Board extends React.Component {
-
-    renderSquare(x) {
-        var btnClass = classNames({
-            'square': true,
-            'alive': this.props.squares[x] === 1
-        });
-        return <Square key={x} class={btnClass} onClick={() => this.props.onClick(x)} />;
-    }
-
-    renderRow(index){
-        var squares = [];
-        for (var i = index; i < index+this.props.width; i++) {
-            squares.push(this.renderSquare(i))
-        }
-        return (<div className="board-row" key={ index/this.props.width }>  
-            {squares}            
-        </div>)
-    }
-
-    render() {
-        return (
-            <div>
-                {this.props.squares.filter( function(rowItem, squareIndex)
-                {
-                    {if (squareIndex % this.props.width === 0){
-                        return true; 
-                    }}
-                  },this).map(function(rowItem, squareIndex){
-                      return(this.renderRow(squareIndex*this.props.width))
-                  },this) }
-            </div>
-        )
-    }
-}
-
-export default class Game extends React.Component {
-    constructor() {
-        super();
+class Game extends React.Component {
+    constructor(dimensions) {
+        super(dimensions);
         this.state = {
-            height:60,
-            width:60,
-            history: [{squares:Array(60*60).fill(0)}],
+            height:dimensions.gridHeight,
+            width:dimensions.gridWidth,
+            history: [{squares:Array(dimensions.gridWidth*dimensions.gridHeight).fill(0)}],
             stepNumber: 0,
             interval: null,
             intervalTime: 10,
@@ -61,7 +17,7 @@ export default class Game extends React.Component {
         this.step = this.step.bind(this)
     }
 
-    handleClick(x) {
+    handleClick = (x) => {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
@@ -76,14 +32,14 @@ export default class Game extends React.Component {
         });
     }
 
-    jumpTo(step) {
+    jumpTo = (step) => {
         this.setState({
         stepNumber: step,
         });
     }
 
     // Randomly fill the squares array with 0's and 1's
-    random() {
+    random = (e) => {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const squares =  Array.from({length: this.state.width*this.state.height}, () => Math.round(Math.random() * 1));
         this.setState({
@@ -93,7 +49,7 @@ export default class Game extends React.Component {
         })
     }
 
-    step() {
+    step = () =>  {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice()
@@ -106,7 +62,7 @@ export default class Game extends React.Component {
     }
 
     // core function, count all the alive cell neighbours
-    neighbourCount(squares){
+    neighbourCount = (squares) => {
 
         var width = this.state.width;
         var height = this.state.height;
@@ -121,7 +77,7 @@ export default class Game extends React.Component {
                 for (var k = -1; k < 2; k++) {
                     var searchx = xpos + k;
 
-                    if (searchx == xpos && searchy == ypos) continue;
+                    if (searchx === xpos && searchy === ypos) continue;
                     if (searchx > 0 && searchx < (width + 1) && searchy > 0 && searchy < (height + 1)) {
                         if (squares[(searchx + (((searchy - 1) * width)) - 1)]) {
                             neighbours++;
@@ -188,7 +144,7 @@ export default class Game extends React.Component {
         return neighboursArray;
     }
 
-    lifeCheck(cells){
+    lifeCheck = (cells) => { 
         var width = this.state.width;
         var height = this.state.height;
         var res = new Array(width*height).fill(0);
@@ -207,7 +163,7 @@ export default class Game extends React.Component {
         return res
     }
 
-    start() {
+    start = () => {
         if (!this.state.running) {
             var interval = setInterval(this.step, this.state.intervaltime);
             this.setState({
@@ -217,7 +173,7 @@ export default class Game extends React.Component {
         }
     }
 
-    stop() {
+    stop = () => {
         if (this.state.running) {
             clearInterval(this.state.interval);
             this.setState({
@@ -227,7 +183,7 @@ export default class Game extends React.Component {
     }
 
     // Just add a new empty array to history (only when !running)
-    clear() {     
+    clear = () =>  {     
         if (!this.state.running){
             const history = this.state.history.slice(0, this.state.stepNumber + 1);
             const squares = new Array(this.state.height*this.state.width).fill(0);
@@ -239,8 +195,7 @@ export default class Game extends React.Component {
 
     }
 
-
-    render() {
+    render = () => {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
 
@@ -257,9 +212,55 @@ export default class Game extends React.Component {
 
                 <div className="game-board">
                     <Board squares=
-                        {current.squares} width={this.state.width} onClick={(x,y) => this.handleClick(x,y)} />
+                        {current.squares} width={this.state.width} onClick={(x) => this.handleClick(x)} />
                 </div>
             </div>
         );
     }
 }
+
+class Board extends React.Component {
+
+    renderSquare = (x) =>  {
+        var btnClass = classNames({
+            'square': true,
+            'alive': this.props.squares[x] === 1
+        });
+        return <Square key={x} class={btnClass} onClick={() => this.props.onClick(x)} />;
+    }
+
+    renderRow = (index) => {
+        var squares = [];
+        for (var i = index; i < index+this.props.width; i++) {
+            squares.push(this.renderSquare(i))
+        }
+        return (<div className="board-row" key={ index/this.props.width }>  
+            {squares}            
+        </div>)
+    }
+
+    render = () => {
+        return (
+            <div>
+                {this.props.squares.filter( function(rowItem, squareIndex)
+                {
+                    if (squareIndex % this.props.width === 0){
+                        return true; 
+                    }
+                  },this).map(function(rowItem, squareIndex){
+                      return(this.renderRow(squareIndex*this.props.width))
+                  },this) }
+            </div>
+        )
+    }
+}
+
+function Square(props) {
+    return (
+        <button className={props.class} title={props.key} key={props.key} onClick={props.onClick} >
+        </button>
+    );
+}
+
+
+export default Game;
