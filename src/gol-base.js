@@ -39,7 +39,7 @@ class Game extends React.Component {
     }
 
     // Randomly fill the squares array with 0's and 1's
-    random = (e) => {
+    random = () => {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const squares =  Array.from({length: this.state.width*this.state.height}, () => Math.round(Math.random() * 1));
         this.setState({
@@ -200,8 +200,7 @@ class Game extends React.Component {
         const current = history[this.state.stepNumber];
 
         return (
-
-            <div className="game">
+            <div className="game container-fluid">
                 <div className="button row">
                     <button onClick={() => this.random()}>Random</button>
                     <button onClick={() => this.step(this)}>Step</button>
@@ -210,11 +209,15 @@ class Game extends React.Component {
                     <button onClick={() => this.clear()}>Clear</button>
                 </div>
 
-                <div className="game-board">
-                    <Board squares=
-                        {current.squares} width={this.state.width} onClick={(x) => this.handleClick(x)} />
+                    <div className="game-board ">
+                        <Board squares=
+                            {current.squares} width={this.state.width} onClick={(x) => this.handleClick(x)} />
+                    </div>
                 </div>
-            </div>
+                
+
+
+
         );
     }
 }
@@ -234,7 +237,7 @@ class Board extends React.Component {
         for (var i = index; i < index+this.props.width; i++) {
             squares.push(this.renderSquare(i))
         }
-        return (<div className="board-row" key={ index/this.props.width }>  
+        return (<div className="board-row row" key={ index/this.props.width }>  
             {squares}            
         </div>)
     }

@@ -26,7 +26,7 @@ let versions = [
   {"Title": "Rule Exploration", "ActiveComponent": (width, height) => <GameRules gridWidth={width} gridHeight={height}/>}
 ]
 
-let state = versions[1];
+let state = versions[0];
 
 // ========================================
 
